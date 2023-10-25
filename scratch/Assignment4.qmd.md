@@ -67,17 +67,21 @@ find_hatching_beach <- function(site, date) {
   # Start with a data frame (or tibble) of site and date for *one* bird
   # Use pipes and dplyr functions to find the hatching beach
   bird_observations <- tibble(site, date)
-  result <- bird_observations %>% 
-    ___ # use as many pipes and dplyr functions as necessary
+  result <- bird_observations %>%  # use as many pipes and dplyr functions as necessary
+    add_count(site) %>% 
+    filter(n==max(n)) %>% #need to return all data for matching beaches
+    filter(date==min(date)) %>% 
+    sample_n(1) %>% 
+    select(site)
   # result should end up as a data frame with one row for the hatching beach
   return(result$site) # return the hatching beach
 }
 
 # split-apply-combine
 bloy_chicks %>% 
-  group_by(___) %>% 
-  summarize(___)
+  group_by(bird) %>% 
+  summarize(find_hatching_beach(site = beach, date = survey))
   
-#Q5:
+#Q5:site = beach, date = survey
 
-#Q6:
+#Q6: Mitchell's for both.
